@@ -3,10 +3,12 @@ package com.tesodev.customer.dto;
 import java.io.Serializable;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 public class AddressDTO implements Serializable {
 
