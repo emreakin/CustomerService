@@ -38,7 +38,7 @@ dependencies {
 
 task unitTest(type: Test) {
     useJUnit()
-    description = "Execute integration tests."
+    description = "Execute unit tests."
     group = "verification"
     include "**/*IT*", "**/*IntTest*"
 
@@ -46,12 +46,5 @@ task unitTest(type: Test) {
         events 'FAILED', 'SKIPPED'
     }
 
-    // uncomment if the tests reports are not generated
-    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-    // ignoreFailures true
     reports.html.enabled = false
 }
-
-/*test {
-	useJUnit()
-}*/

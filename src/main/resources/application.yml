@@ -5,6 +5,6 @@ server:
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/customerdb
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://ec2-18-202-1-222.eu-west-1.compute.amazonaws.com:5432/d4hcfl5ki2tfbd
+    username: lgrwngtaieypij
+    password: ef4ff0e8bbfbe9cb7661e6319e24e6ff4023dfc024156028e71702d5c6346801
