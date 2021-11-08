@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.tesodev.customer.dto.AddressDTO;
 import com.tesodev.customer.dto.CustomerDTO;
 import com.tesodev.customer.entity.Customer;
+import com.tesodev.customer.exception.ServiceException;
 import com.tesodev.customer.mapper.CustomerMapper;
 import com.tesodev.customer.repository.CustomerRepository;
 import com.tesodev.customer.service.IAddressService;
@@ -32,8 +33,11 @@ public class CustomerService implements ICustomerService {
 	private final IAddressService addressService;
 	
 	@Override
-	public UUID create(CustomerDTO customerDTO) {
+	public UUID create(CustomerDTO customerDTO) throws ServiceException {
 		log.debug("Request to save Customer : {}", customerDTO);
+		
+		if(customerDTO.getId() != null)
+			throw new ServiceException("Customer Id should be empty");
 		
 		AddressDTO address = customerDTO.getAddress();
 		if(address.getId() == null || !addressService.validate(address.getId())) {
@@ -48,11 +52,14 @@ public class CustomerService implements ICustomerService {
 	}
 	
 	@Override
-	public boolean update(CustomerDTO customerDTO) {
+	public boolean update(CustomerDTO customerDTO) throws ServiceException {
 		log.debug("Request to update Customer : {}", customerDTO);
 		
+		if(customerDTO.getId() == null)
+			throw new ServiceException("Customer Id shouldn't be empty");
+		
 		if(!customerRepository.existsById(customerDTO.getId()))
-			return false;
+			throw new ServiceException("Customer doesn't exist");
 		
 		customerRepository.save(customerMapper.toEntity(customerDTO));
 		
@@ -60,18 +67,18 @@ public class CustomerService implements ICustomerService {
 	}
 	
 	@Override
-	public boolean delete(UUID customerId) {
+	public boolean delete(UUID customerId) throws ServiceException {
 		log.debug("Request to delete Customer Id : {}", customerId);
-		
-		if(!customerRepository.existsById(customerId))
-			return false;
 		
 		Optional<Customer> customer = customerRepository.findById(customerId);
 		if(!customer.isPresent())
-			return false;
+			throw new ServiceException("Customer doesn't exist");
 		
-		if(!addressService.delete(customer.get().getAddress().getId()))
-			return false;
+		try {
+			addressService.delete(customer.get().getAddress().getId());
+		} catch (ServiceException e) {
+			throw new ServiceException("Address didn't delete beacuse of : " + e.getErrorMessage());
+		}
 		
 		customer.get().setClosed(true);
 		customerRepository.save(customer.get());

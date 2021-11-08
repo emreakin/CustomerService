@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -22,6 +23,7 @@ import com.tesodev.customer.dto.AddressDTO;
 import com.tesodev.customer.dto.CustomerDTO;
 import com.tesodev.customer.entity.Address;
 import com.tesodev.customer.entity.Customer;
+import com.tesodev.customer.exception.ServiceException;
 import com.tesodev.customer.mapper.CustomerMapper;
 import com.tesodev.customer.repository.CustomerRepository;
 import com.tesodev.customer.service.impl.AddressService;
@@ -53,7 +55,12 @@ public class CustomerServiceTest {
 		when(customerRepository.save(ArgumentMatchers.any(Customer.class))).thenReturn(customer);
 		
 		CustomerDTO customerDTO = createDummyCustomerDTO(null);
-		UUID customerId = customerService.create(customerDTO);
+		UUID customerId = null;
+		try {
+			customerId = customerService.create(customerDTO);
+		} catch (ServiceException e) {
+			Assert.fail("Exception " + e);
+		}
 		
 		assertNotNull(customerId);
     }
@@ -68,7 +75,14 @@ public class CustomerServiceTest {
         when(customerRepository.existsById(customer.getId())).thenReturn(true);
         when(customerMapper.toEntity(ArgumentMatchers.any(CustomerDTO.class))).thenReturn(customer);
 
-        assertTrue(customerService.update(newCustomer));
+        boolean status = false;
+		try {
+			status = customerService.update(newCustomer);
+		} catch (ServiceException e) {
+			Assert.fail("Exception " + e);
+		}
+        
+        assertTrue(status);
     }
 	
 	@Test
@@ -76,11 +90,17 @@ public class CustomerServiceTest {
 		Customer customer = createDummyCustomer(GENERATED_CUSTOMER_ID);
 		customer.getAddress().setId(GENERATED_ADDRESS_ID);
 		
-		when(customerRepository.existsById(GENERATED_CUSTOMER_ID)).thenReturn(true);
-		when(customerRepository.findById(GENERATED_CUSTOMER_ID)).thenReturn(Optional.of(customer));
-		when(addressService.delete(GENERATED_ADDRESS_ID)).thenReturn(true);
+		boolean status = false;
+		try {
+			when(customerRepository.findById(GENERATED_CUSTOMER_ID)).thenReturn(Optional.of(customer));
+			when(addressService.delete(GENERATED_ADDRESS_ID)).thenReturn(true);
+			
+			status = customerService.delete(GENERATED_CUSTOMER_ID);
+		} catch (ServiceException e) {
+			Assert.fail("Exception " + e);
+		}
 		
-		assertTrue(customerService.delete(GENERATED_CUSTOMER_ID));
+		assertTrue(status);
 	}
 	
 	@Test
@@ -88,11 +108,17 @@ public class CustomerServiceTest {
 		Customer customer = createDummyCustomer(GENERATED_CUSTOMER_ID);
 		customer.getAddress().setId(GENERATED_ADDRESS_ID);
 		
-		when(customerRepository.existsById(GENERATED_CUSTOMER_ID)).thenReturn(true);
-		when(customerRepository.findById(GENERATED_CUSTOMER_ID)).thenReturn(Optional.of(customer));
-		when(addressService.delete(GENERATED_ADDRESS_ID)).thenReturn(false);
+		boolean status = true;
+		try {
+			when(customerRepository.findById(GENERATED_CUSTOMER_ID)).thenReturn(Optional.of(customer));
+			when(addressService.delete(GENERATED_ADDRESS_ID)).thenReturn(false);
+			
+			status = customerService.delete(GENERATED_CUSTOMER_ID);
+		} catch (ServiceException e) {
+			Assert.fail("Exception " + e);
+		}
 		
-		assertFalse(customerService.delete(GENERATED_CUSTOMER_ID));
+		assertFalse(status);
 	}
 	
 	@Test

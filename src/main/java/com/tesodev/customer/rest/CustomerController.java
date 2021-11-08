@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tesodev.customer.dto.CustomerDTO;
+import com.tesodev.customer.exception.ServiceException;
 import com.tesodev.customer.model.BaseResponseModel;
 import com.tesodev.customer.model.CustomersResultModel;
 import com.tesodev.customer.model.IdResultModel;
@@ -32,8 +33,12 @@ public class CustomerController {
 	public BaseResponseModel<IdResultModel> createCustomer(@RequestBody CustomerDTO customer) {
 		BaseResponseModel<IdResultModel> response = new BaseResponseModel<>();
 		
-		UUID customerId = customerService.create(customer);
-		response.setResult(new IdResultModel(customerId));
+		try {
+			UUID customerId = customerService.create(customer);
+			response.setResult(new IdResultModel(customerId));
+		} catch (ServiceException e) {
+			response.setError(e.getErrorMessage());
+		}
 		
 		return response;
 	}
@@ -42,8 +47,12 @@ public class CustomerController {
 	public BaseResponseModel<StatusResultModel> updateCustomer(@RequestBody CustomerDTO customer) {
 		BaseResponseModel<StatusResultModel> response = new BaseResponseModel<>();
 		
-		boolean resultStatus = customerService.update(customer);
-		response.setResult(new StatusResultModel(resultStatus));
+		try {
+			boolean resultStatus = customerService.update(customer);
+			response.setResult(new StatusResultModel(resultStatus));
+		} catch (ServiceException e) {
+			response.setError(e.getErrorMessage());
+		}
 		
 		return response;
 	}
@@ -52,8 +61,12 @@ public class CustomerController {
 	public BaseResponseModel<StatusResultModel> deleteCustomer(@PathVariable(value = "id", required = true) UUID customerId) {
 		BaseResponseModel<StatusResultModel> response = new BaseResponseModel<>();
 		
-		boolean resultStatus = customerService.delete(customerId);
-		response.setResult(new StatusResultModel(resultStatus));
+		try {
+			boolean resultStatus = customerService.delete(customerId);
+			response.setResult(new StatusResultModel(resultStatus));
+		} catch (ServiceException e) {
+			response.setError(e.getErrorMessage());
+		}
 		
 		return response;
 	}

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -16,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.tesodev.customer.dto.AddressDTO;
 import com.tesodev.customer.entity.Address;
+import com.tesodev.customer.exception.ServiceException;
 import com.tesodev.customer.mapper.AddressMapper;
 import com.tesodev.customer.repository.AddressRepository;
 import com.tesodev.customer.service.impl.AddressService;
@@ -42,7 +44,12 @@ public class AddressServiceTest {
 		when(addressRepository.save(ArgumentMatchers.any(Address.class))).thenReturn(address);
 		
 		AddressDTO addressDTO = createDummyAddressDTO(null);
-		UUID addressId = addressService.create(addressDTO);
+		UUID addressId = null;
+		try {
+			addressId = addressService.create(addressDTO);
+		} catch (ServiceException e) {
+			Assert.fail("Exception " + e);
+		}
 		
 		assertNotNull(addressId);
     }
@@ -51,10 +58,16 @@ public class AddressServiceTest {
 	public void whenShouldDeleteAddressByGivenAddressIdIfFound() {
 		Address address = createDummyAddress(GENERATED_ADDRESS_ID);
 		
-		when(addressRepository.existsById(GENERATED_ADDRESS_ID)).thenReturn(true);
 		when(addressRepository.findById(GENERATED_ADDRESS_ID)).thenReturn(Optional.of(address));
 		
-		assertTrue(addressService.delete(GENERATED_ADDRESS_ID));
+		boolean deleteStatus = false;
+		try {
+			deleteStatus = addressService.delete(GENERATED_ADDRESS_ID);
+		} catch (ServiceException e) {
+			Assert.fail("Exception " + e);
+		}
+		
+		assertTrue(deleteStatus);
 	}
 	
 	@Test

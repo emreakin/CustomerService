@@ -10,4 +10,5 @@ public class BaseResponseModel<T> implements Serializable {
 	private static final long serialVersionUID = -2952094943698738582L;
 	
 	private T result;
+	private String error;
 }
