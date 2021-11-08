@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.tesodev.customer.dto.AddressDTO;
 import com.tesodev.customer.dto.CustomerDTO;
 import com.tesodev.customer.entity.Customer;
+import com.tesodev.customer.exception.ErrorCodes;
 import com.tesodev.customer.exception.ServiceException;
 import com.tesodev.customer.mapper.CustomerMapper;
 import com.tesodev.customer.repository.CustomerRepository;
@@ -37,7 +38,7 @@ public class CustomerService implements ICustomerService {
 		log.debug("Request to save Customer : {}", customerDTO);
 		
 		if(customerDTO.getId() != null)
-			throw new ServiceException("E01", "Customer Id should be empty");
+			throw new ServiceException(ErrorCodes.ID_SHOULD_EMPTY, "Customer Id should be empty");
 		
 		AddressDTO address = customerDTO.getAddress();
 		if(address.getId() == null || !addressService.validate(address.getId())) {
@@ -56,10 +57,10 @@ public class CustomerService implements ICustomerService {
 		log.debug("Request to update Customer : {}", customerDTO);
 		
 		if(customerDTO.getId() == null)
-			throw new ServiceException("E02", "Customer Id shouldn't be empty");
+			throw new ServiceException(ErrorCodes.ID_SHOULD_NOT_EMPTY, "Customer Id shouldn't be empty");
 		
 		if(!customerRepository.existsById(customerDTO.getId()))
-			throw new ServiceException("E03", "Customer doesn't exist");
+			throw new ServiceException(ErrorCodes.RECORD_DOES_NOT_EXIST, "Customer doesn't exist");
 		
 		customerRepository.save(customerMapper.toEntity(customerDTO));
 		
@@ -72,12 +73,12 @@ public class CustomerService implements ICustomerService {
 		
 		Optional<Customer> customer = customerRepository.findById(customerId);
 		if(!customer.isPresent())
-			throw new ServiceException("E03", "Customer doesn't exist");
+			throw new ServiceException(ErrorCodes.RECORD_DOES_NOT_EXIST, "Customer doesn't exist");
 		
 		try {
 			addressService.delete(customer.get().getAddress().getId());
 		} catch (ServiceException e) {
-			throw new ServiceException("E00", "Address didn't delete beacuse of : " + e.getErrorMessage());
+			throw new ServiceException(ErrorCodes.GENERIC_ERROR, "Address didn't delete beacuse of : " + e.getErrorMessage());
 		}
 		
 		customer.get().setClosed(true);

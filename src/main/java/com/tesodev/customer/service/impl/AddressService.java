@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.tesodev.customer.dto.AddressDTO;
 import com.tesodev.customer.entity.Address;
+import com.tesodev.customer.exception.ErrorCodes;
 import com.tesodev.customer.exception.ServiceException;
 import com.tesodev.customer.mapper.AddressMapper;
 import com.tesodev.customer.repository.AddressRepository;
@@ -30,7 +31,7 @@ public class AddressService implements IAddressService {
 		log.debug("Request to save Address : {}", addressDTO);
 		
 		if(addressDTO.getId() != null)
-			throw new ServiceException("E01", "Address Id should be empty");
+			throw new ServiceException(ErrorCodes.ID_SHOULD_EMPTY, "Address Id should be empty");
 		
 		Address address = addressMapper.toEntity(addressDTO);
 		address = addressRepository.save(address);
@@ -43,7 +44,7 @@ public class AddressService implements IAddressService {
 		
 		Optional<Address> address = addressRepository.findById(addressId);
 		if(!address.isPresent())
-			throw new ServiceException("E03", "Address doesn't exist");
+			throw new ServiceException(ErrorCodes.RECORD_DOES_NOT_EXIST, "Address doesn't exist");
 		
 		address.get().setClosed(true);
 		addressRepository.save(address.get());

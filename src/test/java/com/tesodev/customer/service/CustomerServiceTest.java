@@ -22,6 +22,7 @@ import com.tesodev.customer.dto.AddressDTO;
 import com.tesodev.customer.dto.CustomerDTO;
 import com.tesodev.customer.entity.Address;
 import com.tesodev.customer.entity.Customer;
+import com.tesodev.customer.exception.ErrorCodes;
 import com.tesodev.customer.exception.ServiceException;
 import com.tesodev.customer.mapper.CustomerMapper;
 import com.tesodev.customer.repository.CustomerRepository;
@@ -71,7 +72,7 @@ public class CustomerServiceTest {
 		try {
 			customerService.create(customerDTO);
 		} catch (ServiceException e) {
-			assertEquals(e.getErrorCode(), "E01");
+			assertEquals(e.getErrorCode(), ErrorCodes.ID_SHOULD_EMPTY);
 		}
 
     }
@@ -103,7 +104,7 @@ public class CustomerServiceTest {
 		try {
 			customerService.update(customerDTO);
 		} catch (ServiceException e) {
-			assertEquals(e.getErrorCode(), "E02");
+			assertEquals(e.getErrorCode(), ErrorCodes.ID_SHOULD_NOT_EMPTY);
 		}
 
     }
@@ -132,11 +133,11 @@ public class CustomerServiceTest {
 		
 		try {
 			when(customerRepository.findById(GENERATED_CUSTOMER_ID)).thenReturn(Optional.of(customer));
-			when(addressService.delete(GENERATED_ADDRESS_ID)).thenThrow(new ServiceException("E03", "Address doesn't exist"));
+			when(addressService.delete(GENERATED_ADDRESS_ID)).thenThrow(new ServiceException(ErrorCodes.RECORD_DOES_NOT_EXIST, "Address doesn't exist"));
 			
 			customerService.delete(GENERATED_CUSTOMER_ID);
 		} catch (ServiceException e) {
-			assertEquals(e.getErrorCode(), "E00");
+			assertEquals(e.getErrorCode(), ErrorCodes.GENERIC_ERROR);
 		}
 
 	}
