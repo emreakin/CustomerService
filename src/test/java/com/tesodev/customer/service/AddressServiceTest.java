@@ -2,6 +2,7 @@ package com.tesodev.customer.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -52,6 +53,17 @@ public class AddressServiceTest {
 		}
 		
 		assertNotNull(addressId);
+    }
+	
+	@Test
+    public void whenCreateAdressShouldThrownExceptionIfAddressIdNotEmpty() {		
+		
+		AddressDTO addressDTO = createDummyAddressDTO(GENERATED_ADDRESS_ID);
+		try {
+			addressService.create(addressDTO);
+		} catch (ServiceException e) {
+			assertEquals(e.getErrorCode(), "E01");
+		}
     }
 	
 	@Test

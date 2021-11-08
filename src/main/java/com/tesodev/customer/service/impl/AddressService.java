@@ -30,7 +30,7 @@ public class AddressService implements IAddressService {
 		log.debug("Request to save Address : {}", addressDTO);
 		
 		if(addressDTO.getId() != null)
-			throw new ServiceException("Address Id should be empty");
+			throw new ServiceException("E01", "Address Id should be empty");
 		
 		Address address = addressMapper.toEntity(addressDTO);
 		address = addressRepository.save(address);
@@ -43,7 +43,7 @@ public class AddressService implements IAddressService {
 		
 		Optional<Address> address = addressRepository.findById(addressId);
 		if(!address.isPresent())
-			throw new ServiceException("Address doesn't exist");
+			throw new ServiceException("E03", "Address doesn't exist");
 		
 		address.get().setClosed(true);
 		addressRepository.save(address.get());

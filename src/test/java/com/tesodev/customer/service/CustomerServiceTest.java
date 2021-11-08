@@ -1,6 +1,5 @@
 package com.tesodev.customer.service;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,6 +65,18 @@ public class CustomerServiceTest {
     }
 	
 	@Test
+    public void whenCreateAdressShouldThrownExceptionIfCustomerIdNotEmpty() {		
+		
+		CustomerDTO customerDTO = createDummyCustomerDTO(GENERATED_CUSTOMER_ID);
+		try {
+			customerService.create(customerDTO);
+		} catch (ServiceException e) {
+			assertEquals(e.getErrorCode(), "E01");
+		}
+
+    }
+	
+	@Test
     public void whenGivenCustomerShouldUpdateCustomerIfFound() {
 		Customer customer = createDummyCustomer(GENERATED_CUSTOMER_ID);
         
@@ -86,6 +97,18 @@ public class CustomerServiceTest {
     }
 	
 	@Test
+    public void whenUpdateAdressShouldThrownExceptionIfCustomerIdEmpty() {		
+		
+		CustomerDTO customerDTO = createDummyCustomerDTO(null);
+		try {
+			customerService.update(customerDTO);
+		} catch (ServiceException e) {
+			assertEquals(e.getErrorCode(), "E02");
+		}
+
+    }
+	
+	@Test
 	public void whenShouldDeleteCustomerByGivenCustomerIdIfFound() {
 		Customer customer = createDummyCustomer(GENERATED_CUSTOMER_ID);
 		customer.getAddress().setId(GENERATED_ADDRESS_ID);
@@ -103,22 +126,19 @@ public class CustomerServiceTest {
 		assertTrue(status);
 	}
 	
-	@Test
-	public void shouldReturnFalseWhenAdressNotDeleted() {
+	public void shouldThrowExceptionWhenAdressNotDeleted() {
 		Customer customer = createDummyCustomer(GENERATED_CUSTOMER_ID);
 		customer.getAddress().setId(GENERATED_ADDRESS_ID);
 		
-		boolean status = true;
 		try {
 			when(customerRepository.findById(GENERATED_CUSTOMER_ID)).thenReturn(Optional.of(customer));
-			when(addressService.delete(GENERATED_ADDRESS_ID)).thenReturn(false);
+			when(addressService.delete(GENERATED_ADDRESS_ID)).thenThrow(new ServiceException("E03", "Address doesn't exist"));
 			
-			status = customerService.delete(GENERATED_CUSTOMER_ID);
+			customerService.delete(GENERATED_CUSTOMER_ID);
 		} catch (ServiceException e) {
-			Assert.fail("Exception " + e);
+			assertEquals(e.getErrorCode(), "E00");
 		}
-		
-		assertFalse(status);
+
 	}
 	
 	@Test

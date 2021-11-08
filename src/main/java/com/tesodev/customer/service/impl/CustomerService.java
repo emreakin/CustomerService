@@ -37,7 +37,7 @@ public class CustomerService implements ICustomerService {
 		log.debug("Request to save Customer : {}", customerDTO);
 		
 		if(customerDTO.getId() != null)
-			throw new ServiceException("Customer Id should be empty");
+			throw new ServiceException("E01", "Customer Id should be empty");
 		
 		AddressDTO address = customerDTO.getAddress();
 		if(address.getId() == null || !addressService.validate(address.getId())) {
@@ -56,10 +56,10 @@ public class CustomerService implements ICustomerService {
 		log.debug("Request to update Customer : {}", customerDTO);
 		
 		if(customerDTO.getId() == null)
-			throw new ServiceException("Customer Id shouldn't be empty");
+			throw new ServiceException("E02", "Customer Id shouldn't be empty");
 		
 		if(!customerRepository.existsById(customerDTO.getId()))
-			throw new ServiceException("Customer doesn't exist");
+			throw new ServiceException("E03", "Customer doesn't exist");
 		
 		customerRepository.save(customerMapper.toEntity(customerDTO));
 		
@@ -72,12 +72,12 @@ public class CustomerService implements ICustomerService {
 		
 		Optional<Customer> customer = customerRepository.findById(customerId);
 		if(!customer.isPresent())
-			throw new ServiceException("Customer doesn't exist");
+			throw new ServiceException("E03", "Customer doesn't exist");
 		
 		try {
 			addressService.delete(customer.get().getAddress().getId());
 		} catch (ServiceException e) {
-			throw new ServiceException("Address didn't delete beacuse of : " + e.getErrorMessage());
+			throw new ServiceException("E00", "Address didn't delete beacuse of : " + e.getErrorMessage());
 		}
 		
 		customer.get().setClosed(true);
