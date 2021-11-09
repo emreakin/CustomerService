@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-@Table(name = "customer")
+@Table(name = "t_customer")
 @Where(clause = "closed=false")
 public class Customer extends AbstractAuditingEntity implements Serializable {
 
