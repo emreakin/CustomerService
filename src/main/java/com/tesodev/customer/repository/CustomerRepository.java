@@ -1,5 +1,6 @@
 package com.tesodev.customer.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,5 @@ import com.tesodev.customer.entity.Customer;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
 	
-}
+	List<Customer> findByIdIn(List<UUID> ids);
+} 

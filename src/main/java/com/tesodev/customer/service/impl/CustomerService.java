@@ -94,6 +94,12 @@ public class CustomerService implements ICustomerService {
 	}
 	
 	@Override
+	public List<CustomerDTO> getCustomersByIds(List<UUID> customerIds) {
+		log.debug("Request to get Customers by id list");
+		return customerRepository.findByIdIn(customerIds).stream().map(customerMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+	}
+	
+	@Override
 	public CustomerDTO get(UUID customerId) {
 		log.debug("Request to get Customer Id : {}", customerId);
 		Optional<CustomerDTO> customerDTO = customerRepository.findById(customerId).map(customerMapper::toDto);

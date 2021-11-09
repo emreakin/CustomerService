@@ -16,6 +16,8 @@ public interface ICustomerService {
 	
 	List<CustomerDTO> getAll();
 	
+	List<CustomerDTO> getCustomersByIds(List<UUID> customerIds);
+	
 	CustomerDTO get(UUID customerId);
 	
 	boolean validate(UUID customerId) throws ServiceException;

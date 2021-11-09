@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tesodev.customer.dto.CustomerDTO;
 import com.tesodev.customer.exception.ServiceException;
 import com.tesodev.customer.model.BaseResponseModel;
+import com.tesodev.customer.model.CustomerIdListRequestModel;
 import com.tesodev.customer.model.CustomersResultModel;
 import com.tesodev.customer.model.IdResultModel;
 import com.tesodev.customer.model.StatusResultModel;
@@ -76,6 +77,16 @@ public class CustomerController {
 		BaseResponseModel<CustomersResultModel> response = new BaseResponseModel<>();
 		
 		List<CustomerDTO> customers = customerService.getAll();
+		response.setResult(new CustomersResultModel(customers));
+		
+        return response;
+    }
+	
+	@PostMapping("/listByIds")
+    public BaseResponseModel<CustomersResultModel> getCustomersByIds(@RequestBody CustomerIdListRequestModel request) {
+		BaseResponseModel<CustomersResultModel> response = new BaseResponseModel<>();
+		
+		List<CustomerDTO> customers = customerService.getCustomersByIds(request.getIdList());
 		response.setResult(new CustomersResultModel(customers));
 		
         return response;
