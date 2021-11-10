@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "f5cb8676-6fc8-4618-9b13-8e6394a25d3e",
+		"name": "Customer Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/customer/list",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"customer",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"aaa\",\r\n    \"email\": \"aaaa@gmail.com\",\r\n    \"address\": {\r\n        \"addressLine\": \"Test Address 2\",\r\n        \"city\": \"Burdur\",\r\n        \"country\": \"Türkiye\",\r\n        \"cityCode\": 15\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/customer/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"customer",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"57445fb8-46e0-4135-8266-87819a78475c\",\r\n    \"name\": \"Emre Akın X\",\r\n    \"email\": \"emreakin@gmail.com\",\r\n    \"address\": {\r\n        \"id\": \"e3a1db81-c481-42f7-b9d6-d1d7f35a5f80\",\r\n        \"addressLine\": \"Test Address 2\",\r\n        \"city\": \"Antalya\",\r\n        \"country\": \"Türkiye\",\r\n        \"cityCode\": 7\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/customer/update",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"customer",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List By Ids",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idList\": [\r\n        \"49b77192-54d2-4ca4-a8a2-61b72085539e\",\r\n        \"c9580aa1-b440-47c2-92e0-ba42c20d142b\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/customer/listByIds",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"customer",
+						"listByIds"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/customer/delete/05e9d8e5-f003-41b9-9101-bdd9bde720b8",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"customer",
+						"delete",
+						"05e9d8e5-f003-41b9-9101-bdd9bde720b8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/customer/get/57445fb8-46e0-4135-8266-87819a78475c",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"customer",
+						"get",
+						"57445fb8-46e0-4135-8266-87819a78475c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/customer/validate/702deb78-81f3-4310-a2f4-217d6708479b",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"customer",
+						"validate",
+						"702deb78-81f3-4310-a2f4-217d6708479b"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "https://tesodev-be-customerservice.herokuapp.com"
+		}
+	]
+}
